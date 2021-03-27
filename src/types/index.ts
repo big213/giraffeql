@@ -43,7 +43,7 @@ export interface GiraffeqlError {
 export interface Params {
   readonly debug?: boolean;
   readonly lookupValue?: string | boolean | number | null;
-  readonly giraffeqlPath?: string;
+  readonly route?: string;
   readonly processEntireTree?: boolean;
 }
 

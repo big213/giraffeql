@@ -62,34 +62,34 @@ export function initializeGiraffeql(
   {
     debug = false,
     lookupValue = true,
-    giraffeqlPath = "/giraffeql",
+    route = "/giraffeql",
     processEntireTree = true,
   }: Params = {}
 ): void {
   // giraffeqlPath must start with '/'
-  if (!giraffeqlPath.match(/^\//)) {
+  if (!route.match(/^\//)) {
     throw new GiraffeqlInitializationError({
-      message: `Invalid giraffeql path`,
+      message: `Invalid giraffeql route`,
     });
   }
 
   exportedParams = {
     debug,
     lookupValue,
-    giraffeqlPath,
+    route,
     processEntireTree,
   };
 
-  app.post(giraffeqlPath, createGiraffeqlRequestHandler());
+  app.post(route, createGiraffeqlRequestHandler());
 
   // populate all RESTful routes. This should only be done on cold starts.
   rootResolvers.forEach((item, key) => {
     const restOptions = item.definition.restOptions;
     if (!restOptions) return;
 
-    if (restOptions.route === giraffeqlPath)
+    if (restOptions.route === route)
       throw new GiraffeqlInitializationError({
-        message: `Duplicate route for giraffeql path: '${giraffeqlPath}'`,
+        message: `Duplicate route for giraffeql route: '${route}'`,
       });
 
     app[restOptions.method](
