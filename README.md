@@ -9,7 +9,6 @@ GiraffeQL is a JSON-friendly method of sending queries between the client and se
 For more information about GiraffeQL features, check out these wiki links:
 
 - [Hello World example](https://github.com/big213/giraffeql/wiki/Getting-Started)
-- [Advanced usage](https://github.com/big213/giraffeql/wiki/Advanced-Usage)
 - [Roadmap](https://github.com/big213/giraffeql/wiki/Roadmap)
 
 ## License
@@ -18,5 +17,5 @@ GiraffeQL is an open source project under the [MIT License](https://github.com/b
 
 ## Get Help / Contribute
 
-- Please feel free to join our [Discord server](https://discord.gg/HTmwsfYT).
+- Please feel free to join our [Discord server](https://discord.gg/CpSWfub9y6).
 - Open an [issue on GitHub](https://github.com/big213/giraffeql/issues/new)
