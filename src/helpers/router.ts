@@ -80,8 +80,13 @@ export function createRestRequestHandler(
       );
 
       sendSuccessResponse(validatedResults, res);
-    } catch (err) {
-      sendErrorResponse(err, res);
+    } catch (err: unknown) {
+      sendErrorResponse(
+        err instanceof Error
+          ? err
+          : new Error("An unspecified error has occurred"),
+        res
+      );
     }
   };
 }
@@ -143,8 +148,13 @@ export function createGiraffeqlRequestHandler() {
       );
 
       sendSuccessResponse(validatedResults, res);
-    } catch (err) {
-      sendErrorResponse(err, res);
+    } catch (err: unknown) {
+      sendErrorResponse(
+        err instanceof Error
+          ? err
+          : new Error("An unspecified error has occurred"),
+        res
+      );
     }
   };
 }

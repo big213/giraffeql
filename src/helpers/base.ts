@@ -119,11 +119,21 @@ export function validateExternalArgs(
 
     // process all args
     for (const arg of argsArray) {
-      if (!isObject(arg) && !argDefinition.definition.allowNull)
-        throw new GiraffeqlArgsError({
-          message: `Object expected`,
-          fieldPath,
-        });
+      if (!isObject(arg)) {
+        if (argDefinition.definition.allowNull && arg !== null) {
+          throw new GiraffeqlArgsError({
+            message: `Object or null expected`,
+            fieldPath,
+          });
+        }
+
+        if (!argDefinition.definition.allowNull) {
+          throw new GiraffeqlArgsError({
+            message: `Object expected`,
+            fieldPath,
+          });
+        }
+      }
 
       // if arg is null and allowed to be null, do nothing
       if (isObject(arg)) {
