@@ -21,6 +21,7 @@ function generateGiraffeqlResponse(
     ...(error && {
       error: {
         message: error.message,
+        type: error.name,
         fieldPath: error.fieldPath,
         ...(getParams().debug && { stack: error.stack }),
       },

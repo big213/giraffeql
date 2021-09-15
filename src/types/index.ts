@@ -36,6 +36,7 @@ export interface GiraffeqlResponse {
 
 export interface GiraffeqlError {
   message: string;
+  type: string;
   fieldPath?: string[];
   stack?: string;
 }

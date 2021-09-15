@@ -15,7 +15,7 @@ export class GiraffeqlBaseError extends Error {
       fieldPath = [],
       statusCode = 500,
     } = params;
-    super(errorName + ": " + message);
+    super(message);
     this.name = errorName;
     this.fieldPath = fieldPath;
     this.statusCode = statusCode;
