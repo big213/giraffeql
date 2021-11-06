@@ -382,12 +382,19 @@ export function generateAnonymousRootResolver(
   return anonymousRootResolver;
 }
 
-export function generateGiraffeqlResolverTree(
-  fieldValue: unknown,
-  resolverObject: ObjectTypeDefinitionField | RootResolverDefinition,
-  fieldPath: string[] = [],
-  fullTree = false
-): GiraffeqlResolverNode {
+export function generateGiraffeqlResolverTree({
+  fieldValue,
+  resolverObject,
+  fieldPath = [],
+  fullTree = false,
+  validateArgs = false,
+}: {
+  fieldValue: unknown;
+  resolverObject: ObjectTypeDefinitionField | RootResolverDefinition;
+  fieldPath?: string[];
+  fullTree?: boolean;
+  validateArgs?: boolean;
+}): GiraffeqlResolverNode {
   let fieldType = resolverObject.type;
 
   // if string, attempt to convert to TypeDefinition
@@ -456,12 +463,14 @@ export function generateGiraffeqlResolverTree(
     : {};
 
   if (isObject(fieldValue)) {
-    // validate args, if any
-    validateExternalArgs(
-      fieldValue.__args,
-      resolverObject.args,
-      fieldPath.concat("__args")
-    );
+    // validate args in-place, if any
+    if (validateArgs) {
+      validateExternalArgs(
+        fieldValue.__args,
+        resolverObject.args,
+        fieldPath.concat("__args")
+      );
+    }
 
     if (!isLeafNode && fieldType instanceof GiraffeqlObjectType) {
       nestedNodes = {};
@@ -492,12 +501,13 @@ export function generateGiraffeqlResolverTree(
         // only if no resolver do we recursively add to tree
         // if there is a resolver, the sub-tree should be generated in the resolver
         if (fullTree || !resolverObject.resolver)
-          nestedNodes[field] = generateGiraffeqlResolverTree(
-            fieldValue[field],
-            fieldType.definition.fields[field],
-            parentsPlusCurrentField,
-            fullTree
-          );
+          nestedNodes[field] = generateGiraffeqlResolverTree({
+            fieldValue: fieldValue[field],
+            resolverObject: fieldType.definition.fields[field],
+            fieldPath: parentsPlusCurrentField,
+            fullTree,
+            validateArgs,
+          });
       }
     }
   }

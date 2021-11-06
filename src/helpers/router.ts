@@ -57,12 +57,13 @@ export function createRestRequestHandler(
       }
 
       // validate query in-place
-      const giraffeqlResolverTree = generateGiraffeqlResolverTree(
-        giraffeqlQuery,
-        rootResolverObject,
+      const giraffeqlResolverTree = generateGiraffeqlResolverTree({
+        fieldValue: giraffeqlQuery,
+        resolverObject: rootResolverObject,
         fieldPath,
-        true
-      );
+        fullTree: true,
+        validateArgs: true,
+      });
 
       // processes the tree
       const results = await processGiraffeqlResolverTree({
@@ -125,12 +126,13 @@ export function createGiraffeqlRequestHandler() {
       }
 
       // validate query in-place
-      const giraffeqlResolverTree = generateGiraffeqlResolverTree(
-        query,
-        rootResolver.definition,
+      const giraffeqlResolverTree = generateGiraffeqlResolverTree({
+        fieldValue: query,
+        resolverObject: rootResolver.definition,
         fieldPath,
-        true
-      );
+        fullTree: true,
+        validateArgs: true,
+      });
 
       // processes the resolvers
       const results = await processGiraffeqlResolverTree({
