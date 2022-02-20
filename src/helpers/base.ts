@@ -90,7 +90,7 @@ export function validateExternalArgs(
     const inputDef = inputTypeDefs.get(argDefType.name);
     if (!inputDef)
       throw new GiraffeqlArgsError({
-        message: `Unknown inputDef '${argDefType}'`,
+        message: `Unknown inputDef '${argDefType.name}'`,
         fieldPath,
       });
     argDefType = inputDef;
