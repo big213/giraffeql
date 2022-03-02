@@ -26,7 +26,7 @@ export function createRestRequestHandler(
 
       // generate args
       let args = argsTransformer
-        ? argsTransformer(req)
+        ? await argsTransformer(req)
         : {
             ...req.query,
             ...req.params,
