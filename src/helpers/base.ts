@@ -295,7 +295,14 @@ export async function validateGiraffeqlResults(
             Array.isArray(giraffeqlResultsNode) &&
             giraffeqlResolverNode.typeDef.arrayOptions
           ) {
-            return giraffeqlResultsNode.map((ele: unknown) => serializeFn(ele));
+            const allowNullElement = giraffeqlResolverNode.typeDef.arrayOptions!
+              .allowNullElement;
+
+            return giraffeqlResultsNode.map((ele: unknown) => {
+              if (allowNullElement && ele === null) return null;
+
+              return serializeFn(ele);
+            });
           } else {
             return serializeFn(giraffeqlResultsNode);
           }
