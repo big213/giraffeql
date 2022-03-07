@@ -161,7 +161,7 @@ export function createGiraffeqlRequestHandler() {
   };
 }
 
-function sendErrorResponse(err: Error, res: Response) {
+export function sendErrorResponse(err: Error, res: Response) {
   if (getParams().debug) {
     console.log(err);
   }
@@ -181,7 +181,7 @@ function sendErrorResponse(err: Error, res: Response) {
   return res.status(validatedError.statusCode).send(errorResponseObject);
 }
 
-function sendSuccessResponse(results: any, res: Response) {
+export function sendSuccessResponse(results: any, res: Response) {
   const responseObject = generateNormalResponse(results);
 
   res.header("Content-Type", "application/json");

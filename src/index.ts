@@ -16,6 +16,8 @@ import type { Params } from "./types";
 
 export { TsSchemaGenerator } from "./classes/schema";
 
+export { sendErrorResponse, sendSuccessResponse } from "./helpers/router";
+
 export {
   GiraffeqlArgsError,
   GiraffeqlBaseError,
