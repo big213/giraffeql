@@ -9,6 +9,8 @@ GiraffeQL is a JSON-friendly method of sending queries between the client and se
 For more information about GiraffeQL features, check out these wiki links:
 
 - [Hello World example](https://github.com/big213/giraffeql/wiki/Getting-Started)
+- [Giraffeql Boilerplate Template](https://github.com/big213/giraffeql-boilerplate)
+- [Giraffeql.com - Website for documenting your giraffes](https://github.com/big213/giraffeql.com)
 - [Roadmap](https://github.com/big213/giraffeql/wiki/Roadmap)
 
 ## License
