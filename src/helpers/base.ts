@@ -210,7 +210,17 @@ export async function validateGiraffeqlResults(
 
   if (nested) {
     // if output is null, cut the tree short and return
-    if (giraffeqlResultsNode === null) return null;
+    if (giraffeqlResultsNode === null) {
+      // but first, check if null is allowed. if not, throw err
+      if (!giraffeqlResolverNode.typeDef.allowNull) {
+        throw new GiraffeqlResultError({
+          message: `Null output not allowed`,
+          fieldPath: fieldPath,
+        });
+      }
+
+      return null;
+    }
     if (giraffeqlResolverNode.typeDef.arrayOptions) {
       if (Array.isArray(giraffeqlResultsNode)) {
         return Promise.all(
