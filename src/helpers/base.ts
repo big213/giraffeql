@@ -29,7 +29,8 @@ export function isObject(ele: unknown): ele is StringKeyObject {
 
 export function processError(err: unknown, fieldPath?: string[]) {
   if (err instanceof GiraffeqlBaseError) {
-    if (fieldPath) err.fieldPath = fieldPath;
+    // only set fieldPath if it is defined and if it was not already set
+    if (fieldPath && !err.fieldPath) err.fieldPath = fieldPath;
     return err;
   } else if (err instanceof Error) {
     return new GiraffeqlBaseError({
