@@ -83,7 +83,7 @@ export function createRestRequestHandler(
 
       sendSuccessResponse(validatedResults, res);
     } catch (err: unknown) {
-      sendErrorResponse(processError(err), res);
+      sendErrorResponse(err, res);
     }
   };
 }
@@ -144,19 +144,21 @@ export function createGiraffeqlRequestHandler() {
 
       sendSuccessResponse(validatedResults, res);
     } catch (err: unknown) {
-      sendErrorResponse(processError(err), res);
+      sendErrorResponse(err, res);
     }
   };
 }
 
-export function sendErrorResponse(err: GiraffeqlBaseError, res: Response) {
+export function sendErrorResponse(err: unknown, res: Response) {
+  const validatedError = processError(err);
+
   if (getParams().debug) {
     console.log(err);
   }
 
-  const errorResponseObject = generateErrorResponse(err);
+  const errorResponseObject = generateErrorResponse(validatedError);
 
-  return res.status(err.statusCode).send(errorResponseObject);
+  return res.status(validatedError.statusCode).send(errorResponseObject);
 }
 
 export function sendSuccessResponse(results: any, res: Response) {
