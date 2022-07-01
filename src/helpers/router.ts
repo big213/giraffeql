@@ -11,6 +11,7 @@ import {
   validateGiraffeqlResults,
   processGiraffeqlResolverTree,
   generateGiraffeqlResolverTree,
+  processError,
 } from "./base";
 import type { RootResolverDefinition } from "../types";
 
@@ -82,12 +83,7 @@ export function createRestRequestHandler(
 
       sendSuccessResponse(validatedResults, res);
     } catch (err: unknown) {
-      sendErrorResponse(
-        err instanceof Error
-          ? err
-          : new Error("An unspecified error has occurred"),
-        res
-      );
+      sendErrorResponse(processError(err), res);
     }
   };
 }
@@ -99,7 +95,6 @@ export function createGiraffeqlRequestHandler() {
       if (!isObject(req.body)) {
         throw new GiraffeqlQueryError({
           message: `Request body must be object`,
-          fieldPath: [],
         });
       }
 
@@ -109,7 +104,6 @@ export function createGiraffeqlRequestHandler() {
       if (requestedOperations.length !== 1)
         throw new GiraffeqlQueryError({
           message: `Exactly 1 root query required`,
-          fieldPath: [],
         });
 
       const operation = requestedOperations[0];
@@ -121,7 +115,6 @@ export function createGiraffeqlRequestHandler() {
       if (!rootResolver) {
         throw new GiraffeqlQueryError({
           message: `Unrecognized giraffeql root query '${operation}'`,
-          fieldPath: [],
         });
       }
 
@@ -151,34 +144,19 @@ export function createGiraffeqlRequestHandler() {
 
       sendSuccessResponse(validatedResults, res);
     } catch (err: unknown) {
-      sendErrorResponse(
-        err instanceof Error
-          ? err
-          : new Error("An unspecified error has occurred"),
-        res
-      );
+      sendErrorResponse(processError(err), res);
     }
   };
 }
 
-export function sendErrorResponse(err: Error, res: Response) {
+export function sendErrorResponse(err: GiraffeqlBaseError, res: Response) {
   if (getParams().debug) {
     console.log(err);
   }
 
-  // if not a GiraffeqlError, wrap it
-  const validatedError =
-    err instanceof GiraffeqlBaseError
-      ? err
-      : new GiraffeqlBaseError({
-          errorName: "GiraffeqlGenericError",
-          message: err.message,
-          fieldPath: [],
-        });
+  const errorResponseObject = generateErrorResponse(err);
 
-  const errorResponseObject = generateErrorResponse(validatedError);
-
-  return res.status(validatedError.statusCode).send(errorResponseObject);
+  return res.status(err.statusCode).send(errorResponseObject);
 }
 
 export function sendSuccessResponse(results: any, res: Response) {

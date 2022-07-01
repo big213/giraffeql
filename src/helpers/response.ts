@@ -22,7 +22,7 @@ function generateGiraffeqlResponse(
       error: {
         message: error.message,
         type: error.name,
-        fieldPath: error.fieldPath,
+        fieldPath: error.fieldPath ?? null,
         ...(getParams().debug && { stack: error.stack }),
       },
     }),
