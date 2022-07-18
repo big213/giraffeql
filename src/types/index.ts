@@ -79,7 +79,7 @@ export interface InputTypeDefinition {
   fields: {
     [x: string]: GiraffeqlInputFieldType;
   };
-  inputsValidator?: (args: unknown, fieldPath: string[]) => void;
+  inputsValidator?: (args: any, fieldPath: string[]) => void;
 }
 
 export interface ObjectTypeDefinition {
@@ -135,8 +135,8 @@ export type ScalarDefinitionFunction = (value: unknown) => unknown;
 export interface RootResolverFunctionInput {
   req: Request;
   fieldPath: string[];
-  args: unknown;
-  query?: unknown;
+  args: any;
+  query?: any;
 }
 
 export type RootResolverFunction = (
@@ -146,8 +146,8 @@ export type RootResolverFunction = (
 export interface ResolverFunctionInput {
   req: Request;
   fieldPath: string[];
-  args: unknown;
-  query: unknown;
+  args: any;
+  query: any;
   parentValue: any;
   fieldValue: unknown;
   data?: any;
