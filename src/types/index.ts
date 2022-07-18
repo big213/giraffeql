@@ -157,8 +157,8 @@ export type ResolverFunction = (input: ResolverFunctionInput) => unknown;
 
 export interface GiraffeqlResolverNode {
   typeDef: ObjectTypeDefinitionField | RootResolverDefinition;
-  query?: unknown;
-  args?: unknown;
+  query?: any;
+  args?: any;
   nested?: {
     [x: string]: GiraffeqlResolverNode;
   };
