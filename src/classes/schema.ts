@@ -82,13 +82,6 @@ export function executeGiraffeql<Key extends keyof Root>(
     }
 
     this.scaffoldStr += `
-export function executeGiraffeql<Key extends keyof Root>(
-  query: GetQuery<Key>
-): GetResponse<Key> {
-  let data: any;
-  return data;
-}
-
 // scaffolding
 export type GetQuery<K extends keyof Root> = K extends never
   ? Partial<Record<K, Queryize<Root[keyof Root]>>>
