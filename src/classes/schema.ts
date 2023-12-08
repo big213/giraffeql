@@ -35,7 +35,7 @@ type tsTypeFieldFinalValue = {
 };
 
 export class TsSchemaGenerator {
-  scaffoldStr: string;
+  scaffoldStr: string = "";
   typeDocumentRoot: tsTypeFields = {
     value: new Map(),
   };
@@ -64,27 +64,32 @@ export class TsSchemaGenerator {
         ? `"${lookupValue}"`
         : String(lookupValue);
 
-    this.scaffoldStr = `${
-      addQueryBuilder
-        ? `// Query builder (Typescript version >= 4.1.3 required)
-    /*
-    const queryResult = executeGiraffeql({
-      // Start typing here to get hints
-      /* QUERY START */
-    
-      /* QUERY END */  
-    });
-    */
-    
-    export function executeGiraffeql<Key extends keyof Root>(
-      query: GetQuery<Key>
-    ): GetResponse<Key> {
-      let data: any;
-      return data;
-    }`
-        : ""
+    if (addQueryBuilder) {
+      this.scaffoldStr = `// Query builder (Typescript version >= 4.1.3 required)
+const queryResult = executeGiraffeql({
+  // Start typing here to get hints
+  /* QUERY START */
+
+  /* QUERY END */  
+});
+
+export function executeGiraffeql<Key extends keyof Root>(
+  query: GetQuery<Key>
+): GetResponse<Key> {
+  let data: any;
+  return data;
+}`;
     }
-    // scaffolding
+
+    this.scaffoldStr += `
+export function executeGiraffeql<Key extends keyof Root>(
+  query: GetQuery<Key>
+): GetResponse<Key> {
+  let data: any;
+  return data;
+}
+
+// scaffolding
 export type GetQuery<K extends keyof Root> = K extends never
   ? Partial<Record<K, Queryize<Root[keyof Root]>>>
   : Record<K, Queryize<Root[K]>>;
