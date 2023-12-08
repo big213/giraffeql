@@ -52,28 +52,38 @@ export class TsSchemaGenerator {
     description: "All main types",
   };
 
-  constructor({ lookupValue = true }: Params = {}) {
+  constructor({
+    lookupValue = true,
+    addQueryBuilder = true,
+  }: {
+    lookupValue?: boolean;
+    addQueryBuilder?: boolean;
+  } = {}) {
     const lookupString =
       typeof lookupValue === "string"
         ? `"${lookupValue}"`
         : String(lookupValue);
 
-    this.scaffoldStr = `// Query builder (Typescript version >= 4.1.3 required)
-/*
-const queryResult = executeGiraffeql({
-  // Start typing here to get hints
-  
-});
-*/
+    if (addQueryBuilder) {
+      this.scaffoldStr = `// Query builder (Typescript version >= 4.1.3 required)
+      /*
+      const queryResult = executeGiraffeql({
+        // Start typing here to get hints
+        /* QUERY START */
+      
+        /* QUERY END */  
+      });
+      */
+      
+      export function executeGiraffeql<Key extends keyof Root>(
+        query: GetQuery<Key>
+      ): GetResponse<Key> {
+        let data: any;
+        return data;
+      }\n`;
+    }
 
-export function executeGiraffeql<Key extends keyof Root>(
-  query: GetQuery<Key>
-): GetResponse<Key> {
-  let data: any;
-  return data;
-}
-
-// scaffolding
+    this.scaffoldStr = `// scaffolding
 export type GetQuery<K extends keyof Root> = K extends never
   ? Partial<Record<K, Queryize<Root[keyof Root]>>>
   : Record<K, Queryize<Root[K]>>;

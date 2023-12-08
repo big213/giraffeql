@@ -159,6 +159,7 @@ export interface GiraffeqlResolverNode {
   typeDef: ObjectTypeDefinitionField | RootResolverDefinition;
   query?: any;
   args?: any;
+  alias?: string;
   nested?: {
     [x: string]: GiraffeqlResolverNode;
   };
