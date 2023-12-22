@@ -54,35 +54,16 @@ export class TsSchemaGenerator {
 
   constructor({
     lookupValue = true,
-    addQueryBuilder = true,
   }: {
     lookupValue?: boolean;
-    addQueryBuilder?: boolean;
   } = {}) {
     const lookupString =
       typeof lookupValue === "string"
         ? `"${lookupValue}"`
         : String(lookupValue);
 
-    if (addQueryBuilder) {
-      this.scaffoldStr = `// Query builder (Typescript version >= 4.1.3 required)
-const queryResult = executeGiraffeql({
-  // Start typing here to get hints
-  /* QUERY START */
-
-  /* QUERY END */  
-});
-
-export function executeGiraffeql<Key extends keyof Root>(
-  query: GetQuery<Key>
-): GetResponse<Key> {
-  let data: any;
-  return data;
-}`;
-    }
-
     this.scaffoldStr += `
-// scaffolding
+/* Start Scaffolding */
 export type GetQuery<K extends keyof Root> = K extends never
   ? Partial<Record<K, Queryize<Root[keyof Root]>>>
   : Record<K, Queryize<Root[K]>>;
@@ -373,7 +354,7 @@ type LookupValue = ${lookupString}\n\n`;
         `\n`;
     });
 
-    return this.scaffoldStr + typesStr;
+    return `/* Start Scaffolding */\n${this.scaffoldStr}\n/* End Scaffolding */\n${typesStr}`;
   }
 
   buildTsDocument(tsTypeField: tsTypeFields) {
