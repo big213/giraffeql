@@ -62,9 +62,7 @@ export class TsSchemaGenerator {
         ? `"${lookupValue}"`
         : String(lookupValue);
 
-    this.scaffoldStr += `
-/* Start Scaffolding */
-export type GetQuery<K extends keyof Root> = K extends never
+    this.scaffoldStr += `export type GetQuery<K extends keyof Root> = K extends never
   ? Partial<Record<K, Queryize<Root[keyof Root]>>>
   : Record<K, Queryize<Root[K]>>;
 
@@ -107,7 +105,7 @@ type Queryize<T> = T extends Field<infer Type, infer Args>
     : { [P in keyof Type]?: Queryize<Type[P]> } & { __args: Args }
   : never;
   
-type LookupValue = ${lookupString}\n\n`;
+type LookupValue = ${lookupString}`;
   }
 
   buildSchema() {
@@ -354,7 +352,7 @@ type LookupValue = ${lookupString}\n\n`;
         `\n`;
     });
 
-    return `/* Start Scaffolding */\n${this.scaffoldStr}\n/* End Scaffolding */\n${typesStr}`;
+    return `/* Start Scaffolding */\n${this.scaffoldStr}\n/* End Scaffolding */\n\n/* Start Types */\n${typesStr}\n/* End Types */`;
   }
 
   buildTsDocument(tsTypeField: tsTypeFields) {
