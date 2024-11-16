@@ -6,6 +6,7 @@ import {
   GiraffeqlInputTypeLookup,
   GiraffeqlObjectTypeLookup,
   GiraffeqlInputFieldType,
+  GiraffeqlRootResolverType,
 } from "../classes";
 
 // extendable by user
@@ -53,11 +54,11 @@ export type GiraffeqlProcessorFunction = (
 ) => Promise<unknown>;
 
 export type GiraffeqlProcessorFunctionInputs = {
+  giraffeqlRootResolver: GiraffeqlRootResolverType;
   giraffeqlResultsNode?: unknown;
   giraffeqlResolverNode: GiraffeqlResolverNode;
   parentNode?: unknown;
   req: Request;
-  data?: any;
   fieldPath: string[];
   fullTree?: boolean;
 };
@@ -137,6 +138,7 @@ export interface RootResolverFunctionInput {
   fieldPath: string[];
   args: any;
   query?: any;
+  rootResolver: GiraffeqlRootResolverType;
 }
 
 export type RootResolverFunction = (
@@ -150,7 +152,6 @@ export interface ResolverFunctionInput {
   query: any;
   parentValue: any;
   fieldValue: unknown;
-  data?: any;
 }
 
 export type ResolverFunction = (input: ResolverFunctionInput) => unknown;

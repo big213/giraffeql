@@ -17,7 +17,7 @@ function generateGiraffeqlResponse(
   error?: GiraffeqlBaseError
 ): GiraffeqlResponse {
   return {
-    data: data,
+    data,
     ...(error && {
       error: {
         message: error.message,

@@ -552,11 +552,11 @@ export function generateGiraffeqlResolverTree({
 
 // resolves the queries, and attaches them to the obj (if possible)
 export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
+  giraffeqlRootResolver,
   giraffeqlResultsNode,
   giraffeqlResolverNode,
   parentNode,
   req,
-  data = {},
   fieldPath = [],
   fullTree = false,
 }) => {
@@ -569,6 +569,7 @@ export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
         fieldPath,
         args: giraffeqlResolverNode.args,
         query: giraffeqlResolverNode.query,
+        rootResolver: giraffeqlRootResolver,
       });
       // if full tree not required, return here
       if (!fullTree) return results;
@@ -595,7 +596,7 @@ export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
         query: giraffeqlResolverNode.query,
         fieldValue: results,
         parentValue: parentNode,
-        data,
+        rootResolver: giraffeqlRootResolver,
       });
     } else if (nested && isObject(results)) {
       // must be nested field.
@@ -604,11 +605,11 @@ export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
       for (const field in giraffeqlResolverNode.nested) {
         const currentFieldPath = fieldPath.concat(field);
         tempReturnValue[field] = await processGiraffeqlResolverTree({
+          giraffeqlRootResolver,
           giraffeqlResultsNode: isObject(results) ? results[field] : null,
           parentNode: results,
           giraffeqlResolverNode: giraffeqlResolverNode.nested[field],
           req,
-          data,
           fieldPath: currentFieldPath,
         });
       }
