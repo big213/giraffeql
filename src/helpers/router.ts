@@ -3,6 +3,7 @@ import { generateNormalResponse, generateErrorResponse } from "./response";
 import {
   GiraffeqlBaseError,
   GiraffeqlQueryError,
+  GiraffeqlRootResolverType,
   GiraffeqlScalarType,
 } from "../classes";
 import { getParams, lookupSymbol, rootResolvers } from "..";
@@ -13,12 +14,12 @@ import {
   generateGiraffeqlResolverTree,
   processError,
 } from "./base";
-import type { RootResolverDefinition } from "../types";
 
 export function createRestRequestHandler(
-  rootResolverObject: RootResolverDefinition,
+  giraffeqlRootResolver: GiraffeqlRootResolverType,
   operationName: string
 ) {
+  const rootResolverObject = giraffeqlRootResolver.definition;
   return async function (req: Request, res: Response): Promise<void> {
     try {
       const fieldPath = [operationName];
@@ -68,6 +69,7 @@ export function createRestRequestHandler(
 
       // processes the tree
       const results = await processGiraffeqlResolverTree({
+        giraffeqlRootResolver,
         giraffeqlResolverNode: giraffeqlResolverTree,
         req,
         fieldPath,
@@ -129,6 +131,7 @@ export function createGiraffeqlRequestHandler() {
 
       // processes the resolvers
       const results = await processGiraffeqlResolverTree({
+        giraffeqlRootResolver: rootResolver,
         giraffeqlResolverNode: giraffeqlResolverTree,
         req,
         fieldPath,

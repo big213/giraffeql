@@ -96,7 +96,7 @@ export function initializeGiraffeql(
 
     app[restOptions.method](
       restOptions.route,
-      createRestRequestHandler(item.definition, key)
+      createRestRequestHandler(item, key)
     );
   });
 
