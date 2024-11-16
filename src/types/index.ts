@@ -135,10 +135,10 @@ export type ScalarDefinitionFunction = (value: unknown) => unknown;
 
 export interface RootResolverFunctionInput {
   req: Request;
+  rootResolver: GiraffeqlRootResolverType;
   fieldPath: string[];
   args: any;
   query?: any;
-  rootResolver: GiraffeqlRootResolverType;
 }
 
 export type RootResolverFunction = (
@@ -147,6 +147,7 @@ export type RootResolverFunction = (
 
 export interface ResolverFunctionInput {
   req: Request;
+  rootResolver: GiraffeqlRootResolverType;
   fieldPath: string[];
   args: any;
   query: any;
