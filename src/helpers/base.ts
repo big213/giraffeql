@@ -543,7 +543,6 @@ export function generateGiraffeqlResolverTree({
       typeDef: resolverObject,
       query,
       args,
-      validator: resolverObject.validator,
       nested: nestedNodes ?? undefined,
     };
   } catch (err) {
@@ -563,7 +562,7 @@ export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
 }) => {
   try {
     // run the validator first
-    await giraffeqlResolverNode.validator?.({
+    await giraffeqlResolverNode.typeDef.validator?.({
       req,
       fieldPath,
       args: giraffeqlResolverNode.args,

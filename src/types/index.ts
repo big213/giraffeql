@@ -176,7 +176,6 @@ export interface GiraffeqlResolverNode {
   typeDef: ObjectTypeDefinitionField | RootResolverDefinition;
   query: any | undefined;
   args: any | undefined;
-  validator: undefined | ValidatorFunction;
   alias?: string;
   nested?: {
     [x: string]: GiraffeqlResolverNode;
