@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { getParams, objectTypeDefs, inputTypeDefs, lookupSymbol } from "..";
 import {
   GiraffeqlArgsError,
@@ -10,6 +11,7 @@ import {
   GiraffeqlObjectTypeLookup,
   GiraffeqlInputFieldType,
   GiraffeqlBaseError,
+  GiraffeqlRootResolverType,
 } from "../classes";
 
 import {
@@ -414,20 +416,33 @@ export function generateAnonymousRootResolver(
   return anonymousRootResolver;
 }
 
-export function generateGiraffeqlResolverTree({
+export async function generateGiraffeqlResolverTree({
   fieldValue,
   resolverObject,
+  req,
   fieldPath = [],
   fullTree = false,
   validateArgs = false,
+  giraffeqlRootResolver,
 }: {
   fieldValue: unknown;
   resolverObject: ObjectTypeDefinitionField | RootResolverDefinition;
+  req: Request;
   fieldPath: string[];
   fullTree?: boolean;
   validateArgs?: boolean;
-}): GiraffeqlResolverNode {
+  giraffeqlRootResolver: GiraffeqlRootResolverType;
+}): Promise<GiraffeqlResolverNode> {
   try {
+    // run the validator first
+    await resolverObject.validator?.({
+      req,
+      fieldPath,
+      args: resolverObject.args,
+      query: fieldValue,
+      rootResolver: giraffeqlRootResolver,
+    });
+
     let fieldType = resolverObject.type;
 
     // if string, attempt to convert to TypeDefinition
@@ -529,12 +544,14 @@ export function generateGiraffeqlResolverTree({
           // only if no resolver do we recursively add to tree
           // if there is a resolver, the sub-tree should be generated in the resolver
           if (fullTree || !resolverObject.resolver)
-            nestedNodes[field] = generateGiraffeqlResolverTree({
+            nestedNodes[field] = await generateGiraffeqlResolverTree({
               fieldValue: fieldValue[field],
               resolverObject: fieldType.definition.fields[field],
               fieldPath: parentsPlusCurrentField,
               fullTree,
               validateArgs,
+              req,
+              giraffeqlRootResolver,
             });
         }
       }
@@ -561,15 +578,6 @@ export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
   fullTree = false,
 }) => {
   try {
-    // run the validator first
-    await giraffeqlResolverNode.typeDef.validator?.({
-      req,
-      fieldPath,
-      args: giraffeqlResolverNode.args,
-      query: giraffeqlResolverNode.query,
-      rootResolver: giraffeqlRootResolver,
-    });
-
     let results;
     // if it is a root resolver, fetch the results first.
     if (isRootResolverDefinition(giraffeqlResolverNode.typeDef)) {

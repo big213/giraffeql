@@ -58,13 +58,15 @@ export function createRestRequestHandler(
         giraffeqlQuery = presetQuery ?? lookupSymbol;
       }
 
-      // validate query in-place
-      const giraffeqlResolverTree = generateGiraffeqlResolverTree({
+      // validate query in-place (and also run the validators)
+      const giraffeqlResolverTree = await generateGiraffeqlResolverTree({
         fieldValue: giraffeqlQuery,
         resolverObject: rootResolverObject,
-        fieldPath,
         fullTree: true,
         validateArgs: true,
+        req,
+        fieldPath,
+        giraffeqlRootResolver,
       });
 
       // processes the tree
@@ -120,13 +122,15 @@ export function createGiraffeqlRequestHandler() {
         });
       }
 
-      // validate query in-place
-      const giraffeqlResolverTree = generateGiraffeqlResolverTree({
+      // validate query in-place (and also run the validators)
+      const giraffeqlResolverTree = await generateGiraffeqlResolverTree({
         fieldValue: query,
         resolverObject: rootResolver.definition,
-        fieldPath,
         fullTree: true,
         validateArgs: true,
+        req,
+        fieldPath,
+        giraffeqlRootResolver: rootResolver,
       });
 
       // processes the resolvers
