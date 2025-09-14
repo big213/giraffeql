@@ -554,6 +554,7 @@ export async function generateGiraffeqlResolverTree({
               fieldPath: parentsPlusCurrentField,
               fullTree,
               validateArgs,
+              runValidators,
               req,
               rootResolver,
             });
