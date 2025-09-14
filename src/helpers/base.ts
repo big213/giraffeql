@@ -423,7 +423,7 @@ export async function generateGiraffeqlResolverTree({
   fieldPath = [],
   fullTree = false,
   validateArgs = false,
-  giraffeqlRootResolver,
+  rootResolver,
 }: {
   fieldValue: unknown;
   resolverObject: ObjectTypeDefinitionField | RootResolverDefinition;
@@ -431,7 +431,7 @@ export async function generateGiraffeqlResolverTree({
   fieldPath: string[];
   fullTree?: boolean;
   validateArgs?: boolean;
-  giraffeqlRootResolver: GiraffeqlRootResolverType;
+  rootResolver: GiraffeqlRootResolverType;
 }): Promise<GiraffeqlResolverNode> {
   try {
     // run the validator first
@@ -440,7 +440,7 @@ export async function generateGiraffeqlResolverTree({
       fieldPath,
       args: resolverObject.args,
       query: fieldValue,
-      rootResolver: giraffeqlRootResolver,
+      rootResolver,
     });
 
     let fieldType = resolverObject.type;
@@ -551,7 +551,7 @@ export async function generateGiraffeqlResolverTree({
               fullTree,
               validateArgs,
               req,
-              giraffeqlRootResolver,
+              rootResolver,
             });
         }
       }

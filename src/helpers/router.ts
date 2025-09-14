@@ -66,7 +66,7 @@ export function createRestRequestHandler(
         validateArgs: true,
         req,
         fieldPath,
-        giraffeqlRootResolver,
+        rootResolver: giraffeqlRootResolver,
       });
 
       // processes the tree
@@ -130,7 +130,7 @@ export function createGiraffeqlRequestHandler() {
         validateArgs: true,
         req,
         fieldPath,
-        giraffeqlRootResolver: rootResolver,
+        rootResolver,
       });
 
       // processes the resolvers
