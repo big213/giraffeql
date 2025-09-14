@@ -423,6 +423,7 @@ export async function generateGiraffeqlResolverTree({
   fieldPath = [],
   fullTree = false,
   validateArgs = false,
+  runValidators = false,
   rootResolver,
 }: {
   fieldValue: unknown;
@@ -431,17 +432,20 @@ export async function generateGiraffeqlResolverTree({
   fieldPath: string[];
   fullTree?: boolean;
   validateArgs?: boolean;
+  runValidators?: boolean;
   rootResolver: GiraffeqlRootResolverType;
 }): Promise<GiraffeqlResolverNode> {
   try {
-    // run the validator first
-    await resolverObject.validator?.({
-      req,
-      fieldPath,
-      args: resolverObject.args,
-      query: fieldValue,
-      rootResolver,
-    });
+    // run the validator first (if necessary)
+    if (runValidators) {
+      await resolverObject.validator?.({
+        req,
+        fieldPath,
+        args: resolverObject.args,
+        query: fieldValue,
+        rootResolver,
+      });
+    }
 
     let fieldType = resolverObject.type;
 
