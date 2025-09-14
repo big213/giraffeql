@@ -20,6 +20,20 @@ declare global {
 
 export type StringKeyObject = { [x: string]: unknown };
 
+export type ValidatorFunction = ({
+  req,
+  query,
+  args,
+  fieldPath,
+  rootResolver,
+}: {
+  req: Request;
+  query: any;
+  args: any;
+  fieldPath: string[];
+  rootResolver: GiraffeqlRootResolverType;
+}) => void | Promise<void>;
+
 export type ValidMethod =
   | "all"
   | "get"
@@ -97,6 +111,7 @@ export interface ResolverObject {
   allowNull: boolean;
   args?: GiraffeqlInputFieldType;
   description?: string;
+  validator?: ValidatorFunction;
 }
 
 export interface RootResolverDefinition extends ResolverObject {
@@ -159,8 +174,9 @@ export type ResolverFunction = (input: ResolverFunctionInput) => unknown;
 
 export interface GiraffeqlResolverNode {
   typeDef: ObjectTypeDefinitionField | RootResolverDefinition;
-  query?: any;
-  args?: any;
+  query: any | undefined;
+  args: any | undefined;
+  validator: undefined | ValidatorFunction;
   alias?: string;
   nested?: {
     [x: string]: GiraffeqlResolverNode;

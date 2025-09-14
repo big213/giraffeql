@@ -543,6 +543,7 @@ export function generateGiraffeqlResolverTree({
       typeDef: resolverObject,
       query,
       args,
+      validator: resolverObject.validator,
       nested: nestedNodes ?? undefined,
     };
   } catch (err) {
@@ -561,6 +562,15 @@ export const processGiraffeqlResolverTree: GiraffeqlProcessorFunction = async ({
   fullTree = false,
 }) => {
   try {
+    // run the validator first
+    await giraffeqlResolverNode.validator?.({
+      req,
+      fieldPath,
+      args: giraffeqlResolverNode.args,
+      query: giraffeqlResolverNode.query,
+      rootResolver: giraffeqlRootResolver,
+    });
+
     let results;
     // if it is a root resolver, fetch the results first.
     if (isRootResolverDefinition(giraffeqlResolverNode.typeDef)) {
