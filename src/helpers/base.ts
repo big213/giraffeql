@@ -436,17 +436,6 @@ export async function generateGiraffeqlResolverTree({
   rootResolver: GiraffeqlRootResolverType;
 }): Promise<GiraffeqlResolverNode> {
   try {
-    // run the validator first (if necessary)
-    if (runValidators) {
-      await resolverObject.validator?.({
-        req,
-        fieldPath,
-        args: resolverObject.args,
-        query: fieldValue,
-        rootResolver,
-      });
-    }
-
     let fieldType = resolverObject.type;
 
     // if string, attempt to convert to TypeDefinition
@@ -517,6 +506,17 @@ export async function generateGiraffeqlResolverTree({
           resolverObject.args,
           fieldPath.concat("__args")
         );
+      }
+
+      // run the validator (if necessary)
+      if (runValidators) {
+        await resolverObject.validator?.({
+          req,
+          fieldPath,
+          args: fieldValue.__args,
+          query,
+          rootResolver,
+        });
       }
 
       if (!isLeafNode && fieldType instanceof GiraffeqlObjectType) {
