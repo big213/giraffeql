@@ -32,7 +32,7 @@ export type ValidatorFunction = ({
   args: any;
   fieldPath: string[];
   rootResolver: GiraffeqlRootResolverType;
-}) => void | Promise<void>;
+}) => void | void[] | Promise<void | void[]>;
 
 export type ValidMethod =
   | "all"
