@@ -508,15 +508,27 @@ export async function generateGiraffeqlResolverTree({
         );
       }
 
-      // run the validator (if necessary)
+      // run the validators (if necessary)
       if (runValidators) {
-        await resolverObject.validator?.({
-          req,
-          fieldPath,
-          args: fieldValue.__args,
-          query,
-          rootResolver,
-        });
+        Array.isArray(resolverObject.validator)
+          ? await Promise.all(
+              resolverObject.validator.map((validator) =>
+                validator({
+                  req,
+                  fieldPath,
+                  args: fieldValue.__args,
+                  query,
+                  rootResolver,
+                })
+              )
+            )
+          : await resolverObject.validator?.({
+              req,
+              fieldPath,
+              args: fieldValue.__args,
+              query,
+              rootResolver,
+            });
       }
 
       if (!isLeafNode && fieldType instanceof GiraffeqlObjectType) {
