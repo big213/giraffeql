@@ -223,8 +223,8 @@ export async function validateGiraffeqlResults(
     const nested = giraffeqlResolverNode.nested;
 
     if (nested) {
-      // if output is null, cut the tree short and return
-      if (giraffeqlResultsNode === null) {
+      // if output is null/undefined, cut the tree short and return
+      if (giraffeqlResultsNode === null || giraffeqlResultsNode === undefined) {
         // but first, check if null is allowed. if not, throw err
         if (!giraffeqlResolverNode.typeDef.allowNull) {
           throw new GiraffeqlResultError({
