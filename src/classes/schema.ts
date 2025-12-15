@@ -80,6 +80,8 @@ type Field<T, K> = {
 type Responseize<T> = T extends Field<infer Type, infer Args>
   ? Type extends never
     ? never
+    : unknown extends Type
+    ? unknown
     : Type extends (infer U)[]
     ? { [P in keyof U]: Responseize<U[P]> }[]
     : { [P in keyof Type]: Responseize<Type[P]> }
