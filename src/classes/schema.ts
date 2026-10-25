@@ -297,12 +297,6 @@ type LookupValue = ${lookupString}`;
       }
 
       if (argDefType instanceof GiraffeqlInputType) {
-        Object.entries(argDefType.definition.fields).forEach(
-          ([key, argDef]) => {
-            const finalValue = this.processInputFieldDefinition(argDef);
-            inputTypeTypeFields.value.set(key, finalValue);
-          }
-        );
         const argDefName = argDefType.definition.name;
 
         if (!argDefName) throw new Error("At least 1 ArgDef is missing name");
@@ -310,6 +304,13 @@ type LookupValue = ${lookupString}`;
         // add to type InputType if not exists
         if (!this.inputTypeTsTypeFields.value.has(argDefName)) {
           this.inputTypeTsTypeFields.value.set(argDefName, inputTypeTypeFields);
+
+          Object.entries(argDefType.definition.fields).forEach(
+            ([key, argDef]) => {
+              const finalValue = this.processInputFieldDefinition(argDef);
+              inputTypeTypeFields.value.set(key, finalValue);
+            }
+          );
         }
 
         // update the argTypename
